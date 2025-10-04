@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Livro {
+  id        Int      @id @default(autoincrement()) // Mudei para Int como no diagrama
+  titulo    String
+  ano       Int
+  edicao    Int
+  editora   String
+  isbn      String
+
+  // Relacionamento: Um Livro pertence a um Gênero
+  genero    Genero   @relation(fields: [generoId], references: [id])
+  generoId  Int
+
+  // Relacionamento: Um Livro tem um Estoque
+  estoque   Estoque? @relation(fields: [estoqueId], references: [id])
+  estoqueId Int?     @unique // O '?' e '@unique' garantem a relação 1-para-1
+
+  // Relacionamento Muitos-para-Muitos com Autor
+  autores   Autor[]  @relation("LivroAutores")
+
+  // Outros campos que podem ser úteis
+  // idUsuario Int?
+}
+
+model Genero {
+  id           Int     @id @default(autoincrement())
+  nomeDoGenero String  @unique
+  livros       Livro[] // Um Gênero pode ter vários livros
+}
+
+model Autor {
+  id        Int     @id @default(autoincrement())
+  nome      String
+  cpf       String? @unique
+  matricula String? @unique
+  livros    Livro[] @relation("LivroAutores") // Muitos-para-Muitos com Livro
+}
+
+model Estoque {
+  id         Int    @id @default(autoincrement())
+  quantidade Int
+  livro      Livro? // Relação 1-para-1 com Livro
+}

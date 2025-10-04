@@ -1,35 +1,45 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CriarCatalogoDto } from './dto/criar-catalogo.dto';
-import { AtualizarCatalogoDto } from './dto/atualizar-catalogo.dto';
+import { AtualizarCatalogoDto } from './dto/atualizar-catalogo.dto'; // Import que estava faltando
 
 @Injectable()
 export class CatalogoService {
-  private catalogos = [];
+  constructor(private prisma: PrismaService) {}
 
-  listarTodos() {
-    return this.catalogos;
+  create(criarCatalogoDto: CriarCatalogoDto) {
+    // Usa o Prisma para criar um registro na tabela 'livro'
+  
   }
 
-  buscarPorId(id: string) {
-    return this.catalogos.find(item => item.id === id);
+  findAll() {
+    return this.prisma.livro.findMany();
   }
 
-  criar(dados: CriarCatalogoDto) {
-    const novo = { id: Date.now().toString(), ...dados };
-    this.catalogos.push(novo);
-    return novo;
+  async findOne(id: number) {
+    const livro = await this.prisma.livro.findUnique({
+      where: { id },
+    });
+
+    if (!livro) {
+      // Se o livro não for encontrado, lança uma exceção 404
+      throw new NotFoundException(`Livro com o ID #${id} não encontrado.`);
+    }
+
+    return livro;
   }
 
-  atualizar(id: string, dados: AtualizarCatalogoDto) {
-    const index = this.catalogos.findIndex(item => item.id === id);
-    if (index === -1) return null;
-    this.catalogos[index] = { ...this.catalogos[index], ...dados };
-    return this.catalogos[index];
+  async update(id: number, atualizarCatalogoDto: AtualizarCatalogoDto) {
+    // Primeiro, verifica se o livro existe usando o nosso próprio findOne
+    await this.findOne(id);
+
   }
 
-  remover(id: string) {
-    const index = this.catalogos.findIndex(item => item.id === id);
-    if (index === -1) return null;
-    return this.catalogos.splice(index, 1);
+  async remove(id: number) {
+    // Primeiro, verifica se o livro existe
+    await this.findOne(id);
+
+    // Se existir, deleta
+    return this.prisma.livro.delete({ where: { id } });
   }
 }

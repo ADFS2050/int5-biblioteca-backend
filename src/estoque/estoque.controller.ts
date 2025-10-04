@@ -9,7 +9,8 @@ export class EstoqueController {
 
   @Get()
   listarTodos() {
-    return this.estoqueService.listarTodos();
+    // Pass a suitable argument to listarTodos, e.g., an empty object or query params as needed
+    return this.estoqueService.listarTodos({});
   }
 
   @Get(':id')

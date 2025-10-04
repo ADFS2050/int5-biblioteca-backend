@@ -1,5 +1,5 @@
-// DTOs
-export class CriarCatalogoDto {
+export class Catalogo {
+  id: string;
   titulo: string;
   autor: string;
   ano: number;

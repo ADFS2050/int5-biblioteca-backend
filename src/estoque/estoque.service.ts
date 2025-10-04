@@ -6,7 +6,7 @@ import { AtualizarEstoqueDto } from './dto/atualizar-estoque.dto';
 export class EstoqueService {
   private itens = [];
 
-  listarTodos() {
+  listarTodos(listarTodos) {
     return this.itens;
   }
 
