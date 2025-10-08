@@ -1,7 +1,9 @@
 export class Catalogo {
-  id: string;
+  idLivro: number;
+  idUsuario: number;
   titulo: string;
-  autor: string;
   ano: number;
-  genero: string;
+  edicao: number;
+  editora: string;
+  isbn: string;
 }

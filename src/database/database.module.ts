@@ -9,7 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   port: Number(process.env.DB_PORT) || 3306,
       username: process.env.DB_USER || '20252_prjint5',
       password: process.env.DB_PASS || 'Senac@2025',
-      database: process.env.DB_NAME || '',
+      database: process.env.DB_NAME || '20252_prjint_andersonsales',
       entities: [],
       synchronize: true,
     }),

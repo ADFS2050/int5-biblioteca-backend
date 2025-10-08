@@ -1,6 +1,4 @@
 export class Estoque {
-  id: string;
-  nome: string;
+  idEstoque: number;
   quantidade: number;
-  localizacao: string;
 }
