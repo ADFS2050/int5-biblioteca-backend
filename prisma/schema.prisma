@@ -1,4 +1,3 @@
-// datasource e generator continuam os mesmos
 generator client {
   provider = "prisma-client-js"
 }
@@ -6,50 +5,60 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-  //shadowDatabaseUrl = env("DATABASE_URL")
 }
 
-model Livro {
-  idLivro   Int     @id @default(autoincrement())
-  titulo    String
-  ano       Int
-  edicao    Int
-  editora   String
-  isbn      String
-
-  // Relacionamento com Genero (Muitos Livros para Um Gênero)
-
-
-  // Relacionamento com Estoque (Um Livro para Um Estoque)
-  estoque   Estoque? // O '?' indica que um livro pode não ter um estoque (opcional)
-
-  // Relacionamento com Autor (Muitos Livros para Muitos Autores)
-  autores   Autor[] @relation("LivroAutor")
-
-  Genero Genero[]
+model autor {
+  idAutor       Int          @id @default(autoincrement())
+  nome          String       @db.VarChar(150)
+  nacionalidade String       @db.VarChar(100)
+  matricula     String?      @unique(map: "matricula_unica") @db.VarChar(11)
+  livroautor    livroautor[]
 }
 
-model Genero {
-  idGenero      Int     @id @default(autoincrement())
-  nomeDoGenero  String  @unique
-  
-  livros        Livro[] // Um Gênero pode ter vários livros
+model estoque {
+  idEstoque  Int    @id @default(autoincrement())
+  quantidade Int
+  idlivro    Int?
+  livro      livro? @relation(fields: [idlivro], references: [idLivro], onDelete: Restrict, onUpdate: Restrict, map: "livro_no_estoque_fk")
+
+  @@index([idlivro], map: "livro_no_estoque_fk")
 }
 
-model Autor {
-  idAutor       Int     @id @default(autoincrement())
-  nome          String
-  nacionalidade String?
-  matricula     String?     // opcional, evita erro se não houver valor
-  
-  livros        Livro[] @relation("LivroAutor") // ← torne opcional se não quiser preencher agora
+model genero {
+  idGenero     Int           @id @default(autoincrement())
+  nomeDoGenero String        @db.VarChar(100)
+  descricao    String?       @db.VarChar(255)
+  livrogenero  livrogenero[]
 }
 
-model Estoque {
-  idEstoque          Int     @id @default(autoincrement())
-  quantidade  Int
-  
-  // Relacionamento com Livro (Um Estoque para Um Livro)
-  livro       Livro   @relation(fields: [idlivro], references: [idLivro])
-  idlivro     Int     @unique // A chave estrangeira fica aqui e @unique garante a relação 1-para-1
+model livro {
+  idLivro     Int           @id @default(autoincrement())
+  titulo      String        @db.VarChar(200)
+  ano         Int?
+  edicao      Int?
+  editora     String?       @db.VarChar(150)
+  isbn        String        @unique(map: "isbn") @db.VarChar(20)
+  estoque     estoque[]
+  livroautor  livroautor[]
+  livrogenero livrogenero[]
+}
+
+model livroautor {
+  idLivro Int
+  idAutor Int
+  autor   autor @relation(fields: [idAutor], references: [idAutor], onUpdate: Restrict, map: "fk_livroautor_autor")
+  livro   livro @relation(fields: [idLivro], references: [idLivro], onUpdate: Restrict, map: "fk_livroautor_livro")
+
+  @@id([idLivro, idAutor])
+  @@index([idAutor], map: "fk_livroautor_autor")
+}
+
+model livrogenero {
+  idLivro  Int
+  idGenero Int
+  genero   genero @relation(fields: [idGenero], references: [idGenero], onUpdate: Restrict, map: "fk_livrogenero_genero")
+  livro    livro  @relation(fields: [idLivro], references: [idLivro], onUpdate: Restrict, map: "fk_livrogenero_livro")
+
+  @@id([idLivro, idGenero])
+  @@index([idGenero], map: "fk_livrogenero_genero")
 }
