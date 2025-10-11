@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+// src/estoque/estoque.controller.ts
+
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { EstoqueService } from './estoque.service';
 import { CriarEstoqueDto } from './dto/criar-estoque.dto';
 import { AtualizarEstoqueDto } from './dto/atualizar-estoque.dto';
@@ -8,28 +19,34 @@ export class EstoqueController {
   constructor(private readonly estoqueService: EstoqueService) {}
 
   @Get()
-  listarTodos() {
-    // Pass a suitable argument to listarTodos, e.g., an empty object or query params as needed
-    return this.estoqueService.listarTodos({});
+  async findAll() {
+    return await this.estoqueService.findAll();
   }
 
-  @Get(':id')
-  buscarPorId(@Param('id') id: string) {
-    return this.estoqueService.buscarPorId(id);
+  @Get(':idLivro')
+  // ----- CORREÇÃO APLICADA AQUI -----
+  async findOne(@Param('idLivro', ParseIntPipe) idEstoque: number) {
+    // Agora a variável se chama 'idEstoque'
+    return await this.estoqueService.findOne(idEstoque);
   }
 
   @Post()
-  criar(@Body() criarEstoqueDto: CriarEstoqueDto) {
-    return this.estoqueService.criar(criarEstoqueDto);
+  async create(@Body() criarEstoqueDto: CriarEstoqueDto) {
+    return await this.estoqueService.create(criarEstoqueDto);
   }
 
-  @Put(':id')
-  atualizar(@Param('id') id: string, @Body() atualizarEstoqueDto: AtualizarEstoqueDto) {
-    return this.estoqueService.atualizar(id, atualizarEstoqueDto);
+  @Put(':idLivro')
+  // ----- CORREÇÃO APLICADA AQUI -----
+  async update(
+    @Param('idLivro', ParseIntPipe) idEstoque: number, // Variável renomeada
+    @Body() atualizarEstoqueDto: AtualizarEstoqueDto,
+  ) {
+    return await this.estoqueService.update(idEstoque, atualizarEstoqueDto);
   }
 
-  @Delete(':id')
-  remover(@Param('id') id: string) {
-    return this.estoqueService.remover(id);
+  @Delete(':idLivro')
+  // ----- CORREÇÃO APLICADA AQUI -----
+  async remove(@Param('idLivro', ParseIntPipe) idEstoque: number) { // Variável renomeada
+    return await this.estoqueService.remove(idEstoque);
   }
 }

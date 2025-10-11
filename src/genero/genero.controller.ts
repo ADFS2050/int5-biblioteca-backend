@@ -1,35 +1,36 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+// src/genero/genero.controller.ts
+
+import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { GeneroService } from './genero.service';
 import { CriarGeneroDto } from './dto/criar-genero.dto';
 import { AtualizarGeneroDto } from './dto/atualizar-genero.dto';
 
-
-@Controller('generos')
+@Controller('genero')
 export class GeneroController {
   constructor(private readonly generoService: GeneroService) {}
 
   @Post()
-  criar(@Body() criarGeneroDto: CriarGeneroDto) {
-    return this.generoService.criar(criarGeneroDto);
+  async criar(@Body() criarGeneroDto: CriarGeneroDto) {
+    return await this.generoService.criar(criarGeneroDto);
   }
 
   @Get()
-  listarTodos() {
-    return this.generoService.listarTodos();
+  async listarTodos() {
+    return await this.generoService.listarTodos();
   }
 
-  @Get(':id')
-  buscarPorId(@Param('id') id: string) {
-    return this.generoService.buscarPorId(+id); // Converte para número
+  @Get(':idGenero')
+  async buscarPorId(@Param('idGenero', ParseIntPipe) idGenero: number) {
+    return await this.generoService.buscarPorId(idGenero);
   }
 
-  @Put(':id')
-  atualizar(@Param('id') id: string, @Body() atualizarGeneroDto: AtualizarGeneroDto) {
-    return this.generoService.atualizar(+id, atualizarGeneroDto); // Converte para número
+  @Put(':idGenero')
+  async atualizar(@Param('idGenero', ParseIntPipe) idGenero: number, @Body() atualizarGeneroDto: AtualizarGeneroDto) {
+    return await this.generoService.atualizar(idGenero, atualizarGeneroDto);
   }
 
-  @Delete(':id')
-  remover(@Param('id') id: string) {
-    return this.generoService.remover(+id); // Converte para número
+  @Delete(':idGenero')
+  async remover(@Param('idGenero', ParseIntPipe) idGenero: number) {
+    return await this.generoService.remover(idGenero);
   }
 }

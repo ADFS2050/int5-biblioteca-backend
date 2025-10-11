@@ -18,8 +18,8 @@ model autor {
 model estoque {
   idEstoque  Int    @id @default(autoincrement())
   quantidade Int
-  idlivro    Int?
-  livro      livro? @relation(fields: [idlivro], references: [idLivro], onDelete: Restrict, onUpdate: Restrict, map: "livro_no_estoque_fk")
+  idlivro    Int
+  livro      livro @relation(fields: [idlivro], references: [idLivro], onDelete: Restrict, onUpdate: Restrict, map: "livro_no_estoque_fk")
 
   @@index([idlivro], map: "livro_no_estoque_fk")
 }

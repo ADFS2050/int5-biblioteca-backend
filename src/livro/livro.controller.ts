@@ -12,8 +12,8 @@ export class LivroController {
    * HTTP POST /catalogo
    */
   @Post()
-  create(@Body() criarlivroDto: CriarLivroDto) {
-    return this.livroService.create(criarlivroDto);
+  async create(@Body() criarLivroDto: CriarLivroDto) { // << PRECISA ser async
+    return await this.livroService.create(criarLivroDto); // << PRECISA ter return e await
   }
 
   /**

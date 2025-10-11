@@ -1,4 +1,4 @@
-// Define os dados para ATUALIZAR um gênero.
 export class AtualizarGeneroDto {
-  nomeDoGenero?: string;
+  nomeDoGenero?: string; // O '?' torna o campo opcional
+  descricao?: string;    // O '?' torna o campo opcional
 }

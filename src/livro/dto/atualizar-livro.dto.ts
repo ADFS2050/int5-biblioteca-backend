@@ -1,5 +1,11 @@
 export class AtualizarLivroDto {
-  titulo: string;
-  autor: string;
-  ano: number;
+  titulo?: string;
+  ano?: number;
+  edicao?: number;
+  editora?: string;
+  isbn?: string;
+
+  // Adicione estas duas linhas também
+  autoresIds?: number[];
+  generosIds?: number[];
 }
