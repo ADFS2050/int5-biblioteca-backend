@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CriarCatalogoDto } from './dto/criar-catalogo.dto';
-import { AtualizarCatalogoDto } from './dto/atualizar-catalogo.dto'; // Import que estava faltando
+import { CriarLivroDto } from './dto/criar-livro.dto';
+import { AtualizarLivroDto } from './dto/atualizar-livro.dto'; // Import que estava faltando
 
 @Injectable()
-export class CatalogoService {
+export class LivroService {
   constructor(private prisma: PrismaService) {}
 
-  create(criarCatalogoDto: CriarCatalogoDto) {
+  create(criarLivroDto: CriarLivroDto) {
     // Usa o Prisma para criar um registro na tabela 'livro'
   
   }
@@ -16,30 +16,30 @@ export class CatalogoService {
     return this.prisma.livro.findMany();
   }
 
-  async findOne(id: number) {
+  async findOne(idLivro: number) {
     const livro = await this.prisma.livro.findUnique({
-      where: { id },
+      where: { idLivro },
     });
 
     if (!livro) {
       // Se o livro não for encontrado, lança uma exceção 404
-      throw new NotFoundException(`Livro com o ID #${id} não encontrado.`);
+      throw new NotFoundException(`Livro com o ID #${idLivro} não encontrado.`);
     }
 
     return livro;
   }
 
-  async update(id: number, atualizarCatalogoDto: AtualizarCatalogoDto) {
+  async update(idLivro: number, atualizarLivroDto: AtualizarLivroDto) {
     // Primeiro, verifica se o livro existe usando o nosso próprio findOne
-    await this.findOne(id);
+    await this.findOne(idLivro);
 
   }
 
-  async remove(id: number) {
+  async remove(idLivro: number) {
     // Primeiro, verifica se o livro existe
-    await this.findOne(id);
+    await this.findOne(idLivro);
 
     // Se existir, deleta
-    return this.prisma.livro.delete({ where: { id } });
+    return this.prisma.livro.delete({ where: { idLivro } });
   }
 }

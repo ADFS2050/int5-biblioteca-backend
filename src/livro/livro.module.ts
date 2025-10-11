@@ -2,12 +2,12 @@
 import { PrismaModule } from '../prisma/prisma.module';
 
 import { Module } from '@nestjs/common';
-import { CatalogoService } from './catalogo.service';
-import { CatalogoController } from './catalogo.controller';
+import { LivroService } from './livro.service';
+import { LivroController } from './livro.controller';
 
 @Module({
   imports: [PrismaModule], // Agora o TypeScript sabe o que é PrismaModule
-  controllers: [CatalogoController],
-  providers: [CatalogoService],
+  controllers: [LivroController],
+  providers: [LivroService],
 })
-export class CatalogoModule {}
+export class LivroModule {}

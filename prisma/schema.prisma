@@ -1,3 +1,4 @@
+// datasource e generator continuam os mesmos
 generator client {
   provider = "prisma-client-js"
 }
@@ -5,47 +6,50 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  //shadowDatabaseUrl = env("DATABASE_URL")
 }
 
 model Livro {
-  id        Int      @id @default(autoincrement()) // Mudei para Int como no diagrama
+  idLivro   Int     @id @default(autoincrement())
   titulo    String
   ano       Int
   edicao    Int
   editora   String
   isbn      String
 
-  // Relacionamento: Um Livro pertence a um Gênero
-  genero    Genero   @relation(fields: [generoId], references: [id])
-  generoId  Int
+  // Relacionamento com Genero (Muitos Livros para Um Gênero)
 
-  // Relacionamento: Um Livro tem um Estoque
-  estoque   Estoque? @relation(fields: [estoqueId], references: [id])
-  estoqueId Int?     @unique // O '?' e '@unique' garantem a relação 1-para-1
 
-  // Relacionamento Muitos-para-Muitos com Autor
-  autores   Autor[]  @relation("LivroAutores")
+  // Relacionamento com Estoque (Um Livro para Um Estoque)
+  estoque   Estoque? // O '?' indica que um livro pode não ter um estoque (opcional)
 
-  // Outros campos que podem ser úteis
-  // idUsuario Int?
+  // Relacionamento com Autor (Muitos Livros para Muitos Autores)
+  autores   Autor[] @relation("LivroAutor")
+
+  Genero Genero[]
 }
 
 model Genero {
-  id           Int     @id @default(autoincrement())
-  nomeDoGenero String  @unique
-  livros       Livro[] // Um Gênero pode ter vários livros
+  idGenero      Int     @id @default(autoincrement())
+  nomeDoGenero  String  @unique
+  
+  livros        Livro[] // Um Gênero pode ter vários livros
 }
 
 model Autor {
-  id        Int     @id @default(autoincrement())
-  nome      String
-  cpf       String? @unique
-  matricula String? @unique
-  livros    Livro[] @relation("LivroAutores") // Muitos-para-Muitos com Livro
+  idAutor       Int     @id @default(autoincrement())
+  nome          String
+  nacionalidade String?
+  matricula     String?     // opcional, evita erro se não houver valor
+  
+  livros        Livro[] @relation("LivroAutor") // ← torne opcional se não quiser preencher agora
 }
 
 model Estoque {
-  id         Int    @id @default(autoincrement())
-  quantidade Int
-  livro      Livro? // Relação 1-para-1 com Livro
+  idEstoque          Int     @id @default(autoincrement())
+  quantidade  Int
+  
+  // Relacionamento com Livro (Um Estoque para Um Livro)
+  livro       Livro   @relation(fields: [idlivro], references: [idLivro])
+  idlivro     Int     @unique // A chave estrangeira fica aqui e @unique garante a relação 1-para-1
 }

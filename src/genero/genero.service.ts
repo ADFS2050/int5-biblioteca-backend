@@ -18,22 +18,22 @@ export class GeneroService {
     return this.prisma.genero.findMany();
   }
 
-  async buscarPorId(id: number) {
+  async buscarPorId(idGenero: number) {
     return this.prisma.genero.findUnique({
-      where: { id },
+      where: { idGenero },
     });
   }
 
-  async atualizar(id: number, atualizarGeneroDto: AtualizarGeneroDto) {
+  async atualizar(idGenero: number, atualizarGeneroDto: AtualizarGeneroDto) {
     return this.prisma.genero.update({
-      where: { id },
+      where: { idGenero },
       data: atualizarGeneroDto,
     });
   }
 
-  async remover(id: number) {
+  async remover(idGenero: number) {
     return this.prisma.genero.delete({
-      where: { id },
+      where: { idGenero },
     });
   }
 }
