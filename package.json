@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nest start",  
-    "start:dev": "nest start --watch",   
+    "start": "nest start",
+    "start:dev": "nest start --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,12 +15,14 @@
     "@nestjs/common": "^11.1.6",
     "@nestjs/core": "^11.1.6",
     "@nestjs/platform-express": "^11.1.6",
+    "@nestjs/swagger": "^11.2.0",
     "@nestjs/typeorm": "^11.0.0",
     "@prisma/client": "^6.16.3",
     "dotenv": "^17.2.3",
     "mysql2": "^3.15.1",
     "nest": "^0.1.6",
     "rxjs": "^7.8.2",
+    "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.27"
   },
   "devDependencies": {

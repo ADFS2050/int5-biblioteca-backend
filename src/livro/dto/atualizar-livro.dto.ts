@@ -6,6 +6,6 @@ export class AtualizarLivroDto {
   isbn?: string;
 
   // Adicione estas duas linhas também
-  autoresIds?: number[];
-  generosIds?: number[];
+  idAutor?: number[];
+  idGenero?: number[];
 }

@@ -13,8 +13,8 @@ export class LivroService {
    * Cria um novo livro e o conecta com autores e gêneros existentes.
    */
   async create(criarLivroDto: CriarLivroDto) {
-    // 1. Separa os IDs das outras informações do livro
-    const { autoresIds, generosIds, ...dadosDoLivro } = criarLivroDto;
+    // 1. [CORRIGIDO] Separa os IDs usando os nomes padronizados
+    const { idAutor, idGenero, ...dadosDoLivro } = criarLivroDto;
 
     // 2. Cria o livro e, na mesma operação, cria as conexões nas tabelas de junção
     return await this.prisma.livro.create({
@@ -23,7 +23,8 @@ export class LivroService {
 
         // Conecta o livro aos autores através da tabela 'livroautor'
         livroautor: {
-          create: autoresIds.map((id) => ({
+          // [CORRIGIDO] Usa a variável 'autoresIds'
+          create: idAutor.map((id) => ({
             autor: {
               connect: { idAutor: id },
             },
@@ -32,7 +33,8 @@ export class LivroService {
 
         // Conecta o livro aos gêneros através da tabela 'livrogenero'
         livrogenero: {
-          create: generosIds.map((id) => ({
+          // [CORRIGIDO] Usa a variável 'generosIds'
+          create: idGenero.map((id) => ({
             genero: {
               connect: { idGenero: id },
             },
@@ -81,8 +83,8 @@ export class LivroService {
     // 1. Garante que o livro que queremos atualizar existe.
     await this.findOne(idLivro);
 
-    // 2. Separa os IDs das outras informações do livro
-    const { autoresIds, generosIds, ...dadosDoLivro } = atualizarLivroDto;
+    // 2. Separa os IDs das outras informações do livro (este já estava correto)
+    const { idAutor, idGenero, ...dadosDoLivro } = atualizarLivroDto;
 
     return await this.prisma.livro.update({
       where: { idLivro },
@@ -92,14 +94,14 @@ export class LivroService {
         // A estratégia aqui é "substituir": apaga as conexões antigas e cria as novas.
         livroautor: {
           deleteMany: {}, // Apaga todas as conexões de autores existentes para este livro
-          create: autoresIds?.map((id) => ({ // O '?' é por segurança, caso a lista não seja enviada
+          create: idGenero?.map((id) => ({ // O '?' é por segurança, caso a lista não seja enviada
             autor: { connect: { idAutor: id } },
           })),
         },
 
         livrogenero: {
           deleteMany: {}, // Apaga todas as conexões de gêneros existentes
-          create: generosIds?.map((id) => ({
+          create: idGenero?.map((id) => ({
             genero: { connect: { idGenero: id } },
           })),
         },

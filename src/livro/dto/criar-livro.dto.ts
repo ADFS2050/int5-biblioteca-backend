@@ -6,6 +6,6 @@ export class CriarLivroDto {
   isbn: string;
 
   // Adicione estas propriedades para receber os IDs
-  autoresIds: number[];
-  generosIds: number[];
+ idAutor?: number[];
+  idGenero?: number[];
 }
