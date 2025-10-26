@@ -5,16 +5,77 @@ import { AtualizarLivroDto } from './dto/atualizar-livro.dto';
 
 @Injectable()
 export class LivroService {
-  remove(idLivro: number) {
-    throw new Error('Method not implemented.');
-  }
-  update(idLivro: number, atualizarlivroDto: AtualizarLivroDto) {
-    throw new Error('Method not implemented.');
-  }
-  create(criarLivroDto: CriarLivroDto) {
-    throw new Error('Method not implemented.');
-  }
   constructor(private prisma: PrismaService) {}
+
+  async create(criarLivroDto: CriarLivroDto) {
+    const {
+      titulo,
+      ano,
+      edicao,
+      editora,
+      isbn,
+      quantidade,
+      autorNome,
+      idGenero
+    } = criarLivroDto;
+
+    // ✅ Buscar autor
+    let autor = await this.prisma.autor.findFirst({
+      where: { nome: autorNome }
+    });
+
+    // ✅ Criar se não existir
+   if (!autor) {
+  autor = await this.prisma.autor.create({
+    data: {
+      nome: autorNome,
+      nacionalidade: 'Não Informada',
+      matricula: String(Date.now()).slice(-6) // ✅ para caber no VARCHAR(11)
+    }
+  });
+}
+
+    // ✅ Criar livro
+    const livroCriado = await this.prisma.livro.create({
+      data: {
+        titulo,
+        ano,
+        edicao,
+        editora,
+        isbn
+      }
+    });
+
+    const idLivro = livroCriado.idLivro;
+
+    // ✅ Relacionar Autor ao Livro
+    await this.prisma.livroautor.create({
+      data: {
+        idLivro,
+        idAutor: autor.idAutor
+      }
+    });
+
+    // ✅ Relacionar Gêneros ao Livro
+    for (const id of idGenero ?? []) {
+      await this.prisma.livrogenero.create({
+        data: {
+          idLivro,
+          idGenero: id
+        }
+      });
+    }
+
+    // ✅ Criar Estoque com Quantidade Inicial
+    await this.prisma.estoque.create({
+      data: {
+        idlivro: idLivro,
+        quantidade: quantidade ?? 0
+      }
+    });
+
+    return { message: '📚 Livro cadastrado com sucesso!' };
+  }
 
   async findAll() {
     const livros = await this.prisma.livro.findMany({
@@ -49,5 +110,13 @@ export class LivroService {
       autores: livro.livroautor.map((la) => la.autor),
       generos: livro.livrogenero.map((lg) => lg.genero),
     };
+  }
+
+  update(idLivro: number, atualizarlivroDto: AtualizarLivroDto) {
+    throw new Error('Method not implemented.');
+  }
+
+  remove(idLivro: number) {
+    throw new Error('Method not implemented.');
   }
 }

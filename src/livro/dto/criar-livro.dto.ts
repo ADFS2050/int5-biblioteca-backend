@@ -8,4 +8,7 @@ export class CriarLivroDto {
   // Adicione estas propriedades para receber os IDs
  idAutor?: number[];
   idGenero?: number[];
+  autorNome: string;
+quantidade?: number;
+
 }
