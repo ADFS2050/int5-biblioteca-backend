@@ -23,10 +23,8 @@ export class EstoqueController {
     return await this.estoqueService.findAll();
   }
 
-  @Get(':idLivro')
-  // ----- CORREÇÃO APLICADA AQUI -----
-  async findOne(@Param('idLivro', ParseIntPipe) idEstoque: number) {
-    // Agora a variável se chama 'idEstoque'
+  @Get(':idEstoque')
+  async findOne(@Param('idEstoque', ParseIntPipe) idEstoque: number) {
     return await this.estoqueService.findOne(idEstoque);
   }
 
@@ -35,18 +33,16 @@ export class EstoqueController {
     return await this.estoqueService.create(criarEstoqueDto);
   }
 
-  @Put(':idLivro')
-  // ----- CORREÇÃO APLICADA AQUI -----
+  @Put(':idEstoque')
   async update(
-    @Param('idLivro', ParseIntPipe) idEstoque: number, // Variável renomeada
+    @Param('idEstoque', ParseIntPipe) idEstoque: number,
     @Body() atualizarEstoqueDto: AtualizarEstoqueDto,
   ) {
     return await this.estoqueService.update(idEstoque, atualizarEstoqueDto);
   }
 
-  @Delete(':idLivro')
-  // ----- CORREÇÃO APLICADA AQUI -----
-  async remove(@Param('idLivro', ParseIntPipe) idEstoque: number) { // Variável renomeada
+  @Delete(':idEstoque')
+  async remove(@Param('idEstoque', ParseIntPipe) idEstoque: number) {
     return await this.estoqueService.remove(idEstoque);
   }
 }
